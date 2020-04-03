@@ -15,67 +15,104 @@ def setdata(tweetlenth) :
         writer.writerow(["null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","AVG = "+str(tweetlenth),"null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null"])
 
 
+def insertRow(row, index, data):
+        row.insert(index,data)
+        
 
-def getUserDescriptionLength():
-        with open('Testing (1).csv','rt')as read_obj, \
-           open('Testing (2).csv', 'a+', newline='') as write_obj:
+def getUserDescriptionLength(fileName , newFileName , columns , columnsNames):
+        if(len(columns) != len(columnsNames)):
+            print("please enter same number of values of columns and columns_Names")
+            return
+        with open(fileName +'.csv','rt')as read_obj, \
+           open(newFileName + '.csv', 'a+', newline='') as write_obj:
             data = csv.reader(read_obj)
             csv_writer = csv.writer(write_obj)
             count = 0
             for row in data:
+                rowLength =  len(row)
                 if count != 0:
-                    words = row[6].split()                                   
-                    row.append(len(words))
+                    for i in range(len(columns)):                                                             
+                         row.insert(rowLength+i,len(row[int(columns[i])].replace(" ", "")))
+
                     csv_writer.writerow(row)        
                 else:
-                     row.append("DescriptionLength")
-                     csv_writer.writerow(row)
-                     count=1
+                    for i in range(len(columnsNames)):
+                        row.insert(rowLength+i,columnsNames[i])
 
-# def getUserDescriptionLength():
-#         with open('Testing (1).csv','rt')as read_obj:
-           
-#             data = csv.reader(read_obj)
-#             with open('Testing (1).csv', 'a+', newline='') as write_obj:
-#                 csv_writer = csv.writer(write_obj)
-#                 count = 0
-#                 for row in data:
-#                     if count != 0:
-#                         words = row[6].split()                                   
-#                         row.append(len(words))
-#                         csv_writer.writerow(row)        
-#                     else:
-#                         row.append("DescriptionLength")
-#                         csv_writer.writerow(row)
-#                         count=1                     
+                    csv_writer.writerow(row)
+                    count=1
 
-# def getUserDescription():
-#         with open('Testing (1).csv','rt')as read_obj:
-#              data = csv.reader(read_obj)
-             
 
-#         return data
+                    
 
-# def getUserDescriptionLength(userDescription):
+def roundColuemns(fileName , newFileName , columns , columnsNames):
+        if(len(columns) != len(columnsNames)):
+            print("please enter same number of values of columns and columns_Names")
+            return
+        with open(fileName +'.csv','rt')as read_obj, \
+           open(newFileName + '.csv', 'a+', newline='') as write_obj:
+            data = csv.reader(read_obj)
+            csv_writer = csv.writer(write_obj)
+            count = 0
+            for row in data:
+                rowLength = len(row)
+                if count != 0:
+                    
+                    for i in range(len(columns)): 
+                        try: 
+                            cell = row[int(columns[i])]
+                            
+                            if(cell != "?"):        
+                                
+                                row.insert(rowLength+i,round(float(cell)))
+                            else:
+                                row.insert(rowLength+i,"?") 
+                        except Exception:
+                                print("error in 68")
+                                                        
+                    csv_writer.writerow(row)                          
+                else:
+                    for i in range(len(columnsNames)):
+                        row.insert(rowLength+i,columnsNames[i])
+
+                    csv_writer.writerow(row)
+                    count=1
+
+
+#                       6,7
+def getRatio(fileName , newFileName , columns , columnsNames):
         
-#         with open('Testing (1).csv', 'a+', newline='') as write_obj:
-#             csv_writer = csv.writer(write_obj)
-#             count = 0
-#             for row in userDescription:
-#                     if count != 0:
-#                         words = row[6].split()                                   
-#                         row.append(len(words))
-#                         csv_writer.writerow(row)        
-#                     else:
-#                         row.append("DescriptionLength")
-#                         csv_writer.writerow(row)
-#                         count=1
+        with open(fileName +'.csv','rt')as read_obj, \
+           open(newFileName + '.csv', 'a+', newline='') as write_obj:
+            data = csv.reader(read_obj)
+            csv_writer = csv.writer(write_obj)
+            count = 0
+            for row in data:
+                rowLength =  len(row)
+              
+                if count != 0:
+                    try:        
+                        num1 = int(row[int(columns[0])])
+                        num2 = int(row[int(columns[1])])                                                           
+                        row.insert(rowLength+1,(num1/num2))
+                    except Exception:
+                            row.insert(rowLength+1,0)
+                    csv_writer.writerow(row)        
+                else:
+                  
+                    row.insert(rowLength+1,columnsNames)
 
-
+                    csv_writer.writerow(row)
+                    count=1
 
                
 
 def main():
     #setdata(getavg(24))
-    getUserDescriptionLength() 
+    #getUserDescriptionLength("Testing" , "t2" , ["3","37"],["userDis","userScreenNameLe"]) 
+    #roundColuemns("Testing" , "t1" , ["33","34","35"],["round1","round2","round2"])
+    getRatio("Testing" , "t2" , ["6","7"],"raio")
+    
+   
+
 if __name__== "__main__": main()
