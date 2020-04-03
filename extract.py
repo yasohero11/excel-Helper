@@ -12,4 +12,9 @@ def getavg(cnum) :
 def setdata(tweetlenth) :
     with open('c.csv', 'a+', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","AVG = "+tweetlenth,"null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null"])
+        writer.writerow(["null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","AVG = "+str(tweetlenth),"null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null","null", "null", "null","null","null"])
+
+def main():
+    setdata(getavg(24))
+  
+if __name__== "__main__": main()
