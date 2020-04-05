@@ -134,7 +134,7 @@ def writeData(filePath):
                
 
 def main():
-    print()
+   
     #setdata(getavg(24))
     #getUserDescriptionLength("Testing" , "t2" , ["3","37"],["userDis","userScreenNameLe"]) 
     #roundColuemns("Testing" , "t1" , ["33","34","35"],["round1","round2","round2"])
@@ -149,30 +149,32 @@ def main():
     #         except Exception:
     #             print("any")    
     
-        # fileName =  input("please enter the file path here : ")
-        # newFile = input("do you want the results in other file? if yes please enter the path and the new file name with .csv at the end in no just press enter : ")
-        # if(newFile == ""):
-        #     newFile  = fileName
+        fileName =  input("please enter the file path here : ")
+        readData(fileName)
+        newFile = input("do you want the results in other file? if yes please enter the path and the new file name with .csv at the end in no just press enter : ")
+        if(newFile == ""):
+            newFile  = fileName
 
 
-        # answer = input("please enter your requiest : \n 1. for avrage enter 'a' \n 2. for charcters count enter 'c' \n 3. for round columens enter 'r' \n answer : ")
-        # if(len(answer) == 1):
-        #     if(re.findall("a|c|r", answer)):
+        answer = input("please enter your requiest : \n 1. for avrage enter 'a' \n 2. for charcters count enter 'c' \n 3. for round columens enter 'r' \n answer : ")
+        if(len(answer) == 1):
+            if(re.findall("a|c|r", answer)):
 
-        #         if(answer == "c"):
-        #             columns = (input("enter columns names with sperated ',' : ")).replace(" " , "").split(",") 
-        #             columnsNames = (input("enter new columns names with sperated ',' : ")).replace(" " , "").split(",") 
-        #             if(checkColuemns(columns , columnsNames)):
-        #                 getUserDescriptionLength(fileName , columns , columnsNames)    
+                if(answer == "c"):
+                    columns = (input("enter columns names with sperated ',' : ")).replace(" " , "").split(",") 
+                    columnsNames = (input("enter new columns names with sperated ',' : ")).replace(" " , "").split(",") 
+                    if(checkColuemns(columns , columnsNames)):
+                        getUserDescriptionLength(fileName , columns , columnsNames)    
 
                     
-        #             #print("the columens names not equal to new columens names, try agaien")
+                    #print("the columens names not equal to new columens names, try agaien")
       
-        # else:
-        #     print("you enterd a word not a charter, please try ")
+        else:
+            print("you enterd a word not a charter, please try ")
+        
+        writeData(newFile) 
 
-
-        # input("exit")     
+        input("exit")     
 
         #readData(fileName)
         
