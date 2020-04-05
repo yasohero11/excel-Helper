@@ -1,5 +1,6 @@
 import csv
 import re
+import insults
 
 myData =  []
 
@@ -23,13 +24,9 @@ def setdata(tweetlenth) :
 
 
 def getUserDescriptionLength(fileName , columns , columnsNames):
-        
-            
-            
-    
+
             count = 0
             for row in myData:
-               
                 if count != 0:
                     for i in range(len(columns)):                                                             
                         row[columnsNames[i]] = len(row[columns[i]].replace(" ", ""))
@@ -94,6 +91,25 @@ def getRatio(fileName , columns , columnsNames):
                 else:                  
                     row[columnsNames] = columnsNames 
                     count=1
+def getinsults(columns , columnsNames):
+        tweetinsults = ""
+        insult = insults.insults()
+        count = 0
+        for row in myData:      
+            if count != 0:
+                try:
+                    tweet = row[columns]
+                    for ins in range(len(insult)) :
+                        if (tweet.find(insult[ins]) != -1): 
+                            tweetinsults = tweetinsults + insult[ins] + "  "
+                                                                     
+                    row[columnsNames] = tweetinsults
+                    tweetinsults = ""   
+                except Exception as e:
+                        row[columnsNames] = 0                 
+            else:                  
+                row[columnsNames] = columnsNames 
+                count=1
 
 def checkColuemns(coluemn1 , coluemn2):
     if(len(coluemn1) ==  len(coluemn2)) :
@@ -134,7 +150,9 @@ def writeData(filePath):
                
 
 def main():
-    print()
+    readData("x.csv")
+    getinsults("Text","Insults")
+    writeData("x.csv")
     #setdata(getavg(24))
     #getUserDescriptionLength("Testing" , "t2" , ["3","37"],["userDis","userScreenNameLe"]) 
     #roundColuemns("Testing" , "t1" , ["33","34","35"],["round1","round2","round2"])
