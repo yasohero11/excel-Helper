@@ -1,5 +1,6 @@
 import csv
 import re
+import insults
 
 myData =  []
 
@@ -22,14 +23,10 @@ def setdata(tweetlenth) :
 
 
 
-def getUserDescriptionLength(fileName , columns , columnsNames):
-        
-            
-            
-    
+def getUserDescriptionLength(columns , columnsNames):
+
             count = 0
             for row in myData:
-               
                 if count != 0:
                     for i in range(len(columns)):                                                             
                         row[columnsNames[i]] = len(row[columns[i]].replace(" ", ""))
@@ -44,14 +41,14 @@ def getUserDescriptionLength(fileName , columns , columnsNames):
 
                     
 
-def roundColuemns(fileName , columns , columnsNames):
+def roundColuemns(columns):
            
         
            
             count = 0
             for row in myData:
                 
-                if count != 0:
+                # if count != 0:
                     
                     for i in range(len(columns)): 
                         try: 
@@ -59,21 +56,21 @@ def roundColuemns(fileName , columns , columnsNames):
                             
                             if(cell != "?"):        
                                 
-                                row[columnsNames[i]] = round(float(cell))
+                                row[columns[i]] = round(float(cell))
                             else:
-                                row[columnsNames[i]] = "?" 
+                                row[columns[i]] = "?" 
                         except Exception:
                                 print("error in 68")
                                                         
                                             
-                else:
-                    for i in range(len(columnsNames)):
-                        row[columnsNames[i]] = columnsNames[i]
+                # else:
+                #     for i in range(len(columnsNames)):
+                #         row[columnsNames[i]] = columnsNames[i]
                 
-                    count=1
+                #     count=1
             
 
-def getRatio(fileName , columns , columnsNames):
+def getRatio(columns , columnsNames):
         
             if(len(columns) > 2):
                 print("you can't enter more than two columens")
@@ -94,6 +91,25 @@ def getRatio(fileName , columns , columnsNames):
                 else:                  
                     row[columnsNames] = columnsNames 
                     count=1
+def getinsults(columns , columnsNames):
+        tweetinsults = ""
+        insult = insults.insults()
+        count = 0
+        for row in myData:      
+            if count != 0:
+                try:
+                    tweet = row[columns]
+                    for ins in range(len(insult)) :
+                        if (tweet.find(insult[ins]) != -1): 
+                            tweetinsults = tweetinsults + insult[ins] + "  "
+                                                                     
+                    row[columnsNames] = tweetinsults
+                    tweetinsults = ""   
+                except Exception as e:
+                        row[columnsNames] = 0                 
+            else:                  
+                row[columnsNames] = columnsNames 
+                count=1
 
 def checkColuemns(coluemn1 , coluemn2):
     if(len(coluemn1) ==  len(coluemn2)) :
@@ -124,9 +140,14 @@ def writeData(filePath):
     try:
         with open( filePath, 'w', newline='') as write_obj:
                     csv_writer = csv.writer(write_obj)  
-
+                    count = 0
+                    
                     for row in myData:
-                        csv_writer.writerow(row.values())            
+                        if count != 0:                        
+                            csv_writer.writerow(row.values())            
+                        else:
+                            csv_writer.writerow(row.keys())  
+                            count = 1      
 
                     
     except Exception as e:
@@ -134,7 +155,22 @@ def writeData(filePath):
                
 
 def main():
-   
+
+     filePath = input("enter file path here : ")
+     newFilePath = input("new file path : ")
+     if(newFilePath == ""):
+         newFilePath = filePath
+
+     readData(filePath)
+     roundColuemns(["FollowersToAccountAge" , "StatusesCountToAccountAge"])
+     getUserDescriptionLength(["User.Screen_name" , "User.Description"],["User.Screen_Count", "User.Description_Count"])
+     getRatio(["User.Followers_count","User.Friends_count"],"ratio")
+     getinsults("Text","Insults")
+     writeData(newFilePath)
+     
+    # getinsults("Text","Insults")
+    # writeData("x.csv")
+
     #setdata(getavg(24))
     #getUserDescriptionLength("Testing" , "t2" , ["3","37"],["userDis","userScreenNameLe"]) 
     #roundColuemns("Testing" , "t1" , ["33","34","35"],["round1","round2","round2"])
@@ -149,32 +185,32 @@ def main():
     #         except Exception:
     #             print("any")    
     
-        fileName =  input("please enter the file path here : ")
-        readData(fileName)
-        newFile = input("do you want the results in other file? if yes please enter the path and the new file name with .csv at the end in no just press enter : ")
-        if(newFile == ""):
-            newFile  = fileName
+        # fileName =  input("please enter the file path here : ")
+        # readData(fileName)
+        # newFile = input("do you want the results in other file? if yes please enter the path and the new file name with .csv at the end in no just press enter : ")
+        # if(newFile == ""):
+        #     newFile  = fileName
 
 
-        answer = input("please enter your requiest : \n 1. for avrage enter 'a' \n 2. for charcters count enter 'c' \n 3. for round columens enter 'r' \n answer : ")
-        if(len(answer) == 1):
-            if(re.findall("a|c|r", answer)):
+        # answer = input("please enter your requiest : \n 1. for avrage enter 'a' \n 2. for charcters count enter 'c' \n 3. for round columens enter 'r' \n answer : ")
+        # if(len(answer) == 1):
+        #     if(re.findall("a|c|r", answer)):
 
-                if(answer == "c"):
-                    columns = (input("enter columns names with sperated ',' : ")).replace(" " , "").split(",") 
-                    columnsNames = (input("enter new columns names with sperated ',' : ")).replace(" " , "").split(",") 
-                    if(checkColuemns(columns , columnsNames)):
-                        getUserDescriptionLength(fileName , columns , columnsNames)    
+        #         if(answer == "c"):
+        #             columns = (input("enter columns names with sperated ',' : ")).replace(" " , "").split(",") 
+        #             columnsNames = (input("enter new columns names with sperated ',' : ")).replace(" " , "").split(",") 
+        #             if(checkColuemns(columns , columnsNames)):
+        #                 getUserDescriptionLength(fileName , columns , columnsNames)    
 
                     
-                    #print("the columens names not equal to new columens names, try agaien")
+        #             #print("the columens names not equal to new columens names, try agaien")
       
-        else:
-            print("you enterd a word not a charter, please try ")
+        # else:
+        #     print("you enterd a word not a charter, please try ")
         
-        writeData(newFile) 
+        # writeData(newFile) 
 
-        input("exit")     
+        # input("exit")     
 
         #readData(fileName)
         
