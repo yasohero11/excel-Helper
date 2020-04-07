@@ -95,28 +95,31 @@ def getRatio(columns , columnsNames):
 
 
 def getinsults(columns , columnsNames):
-        tweetinsults = ""
+     
+        
         insult = insults.insults()
-        count = 0
-        for row in myData:      
-            if count != 0:
-                try:
-                    tweet = row[columns[0]]
-                    for ins in range(len(insult)) :
-                        if (tweet.find(insult[ins]) != -1): 
-                            tweetinsults = tweetinsults + insult[ins] + "  "
-                                                                     
-                    row[columnsNames[0]] = tweetinsults
-                    tweetinsults = ""   
-                    
-                except Exception as e:
-                        row[columnsNames[0]] = 0
+        for col in range(len(columns)):
+            tweetinsults = ""
+            count = 0
+            for row in myData:      
+                if count != 0:
+                    try:
+                        tweet = row[columns[col]]
+                        for ins in range(len(insult)) :
+                            if (tweet.find(insult[ins]) != -1): 
+                                tweetinsults = tweetinsults + insult[ins] + "  "
+                               
+                                                                        
+                        row[columnsNames[col]] = tweetinsults
+                        tweetinsults = ""   
                         
-                             
-            else:                  
-                row[columnsNames[0]] = columnsNames[0]
-                count=1
-
+                    except Exception as e:
+                            row[columnsNames[col]] = 0
+                            
+                                
+                else:                  
+                    row[columnsNames[col]] = columnsNames[col]
+                    count=1
 
 
 def checkColuemns(coluemn1 , coluemn2):
@@ -247,7 +250,6 @@ def main():
             answer = input("please enter your requiest : \n 1. for avrage  \n 2. for charcters count  \n 3. for round columens \n 4. for insultes  \n 5. for ratio of 2 columens \n 0. for exit \n\n  answer : ")
             if(len(answer) == 1):
                 if(re.findall("0|1|2|3|4|5", answer)):
-
                     if(answer == "2"):
                         columns , columnsNames = getAnswer()
                         getUserDescriptionLength(columns , columnsNames)
