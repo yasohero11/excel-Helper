@@ -1,7 +1,7 @@
 # excel-Helper
 A python console project that automate excel boring work and make it much easier to for modifying and analysis an excel file, this project uses
 CSV, NLTK library
-# there is many functionality provided to make the work fast and easy
+## there is many functionality provided to make the work fast and easy
 
   1) get number of characters with a text or a number
   2) pick out the mean words and insultes within a tex
