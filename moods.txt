@@ -1,0 +1,5 @@
+4 : Text : insultes
+1 : Text : sentiments
+2 : User.Description , User.Screen_name : User.Description.len , User.Screen_name.len
+3 : FollowersToAccountAge , FriendsToAccountAge , StatusesCountToAccountAge
+5 : User.Followers_count , User.Friends_count : FollowersToFriends

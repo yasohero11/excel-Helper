@@ -1,0 +1,6 @@
+1. for text sentiment
+2. for charcters count  
+3. for round columens
+4. for insultes
+5. for ratio of 2 columens
+6. excute mood

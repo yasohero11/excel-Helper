@@ -1,8 +1,13 @@
 import csv
 import re
 import insults
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import string
 
 myData =  []
+
 
 
 def getavg(cnum) :
@@ -60,7 +65,7 @@ def roundColuemns(columns):
                             else:
                                 row[columns[i]] = 1000 
                         except Exception:
-                                print("error in 68")
+                                row[columns[i]] = 1000 
                                                         
                                             
                 # else:
@@ -160,7 +165,7 @@ def getAnswer():
 def setColumens():
      
      while True:
-        columns = (input("\n enter columns names with sperated ',' : ")).replace(" " , "").split(",") 
+        columns = (input("\nenter columns names with sperated ',' : ")).replace(" " , "").split(",") 
         if(columns[0] == "0") : exit()
         column = isColuemn(columns)
         if(column == True): 
@@ -191,17 +196,26 @@ def setColumensNames():
 
 def readData(filePath):
     try:
-        with open(filePath,'rt')as read_obj:
+       
+        with open(filePath,'rt',encoding='cp437')as read_obj:
                 data = csv.DictReader(read_obj)                        
                 for row in data:                    
                     myData.append(row)
+                   
+
         print("Data is been loaded successfully \n")  
         return True                  
     except Exception as e:
         print("There is a problem on reading the file\n")
+        print(e)
         return False
+          
+              
+
+                  
+      
         
-    
+            
         
 
 
@@ -209,7 +223,7 @@ def readData(filePath):
 
 def writeData(filePath):
     try:
-        with open( filePath, 'w', newline='') as write_obj:
+        with open( filePath, 'w', newline='',encoding='cp437') as write_obj:
                     csv_writer = csv.writer(write_obj)  
                     count = 0
                     
@@ -224,9 +238,83 @@ def writeData(filePath):
     except Exception as e:
         print(e)
                
-
-def main():
+def executeMood(moodName):
+    try:
+        file = open(moodName + ".txt" , "r")
         
+        while True:
+            data = file.readline().replace(" " ,"")
+            data =  data.replace("\n" , "")
+            data =  data.split(":")
+            if(data[0] == ''):
+                break
+            
+            print("\n Executeing the mood ... \n")
+            if(data[0] == "1"):
+                columens =  data[1].split(",")   
+                columensNames =  data[2].split(",")
+                getColumenVibes(columens,columensNames)
+            elif(data[0] == "2"):
+                columens =  data[1].split(",")   
+                columensNames =  data[2].split(",")                
+                getUserDescriptionLength(columens,columensNames)
+            elif(data[0] == "3"):
+                columens = data[1].split(",")
+                roundColuemns(columens)
+            elif(data[0] == "4"):
+                columens =  data[1].split(",")   
+                columensNames =  data[2].split(",")
+                getinsults(columens,columensNames)
+            elif(data[0] == "5"):
+                columens =  data[1].split(",")   
+                columensNames =  data[2]
+                getRatio(columens , [columensNames])
+        print("\nDone .... \n")        
+    except Exception:
+        print(moodName + " is not exist, please try agien")
+       
+
+def getMessageVibe(text):
+    
+    clean_text =  text.lower()
+    clean_text =  clean_text.translate(str.maketrans("" , "" , string.punctuation))
+    vibe =  SentimentIntensityAnalyzer().polarity_scores(clean_text)
+    pos= vibe["pos"]
+    neg = vibe["neg"]
+    final_vibe = ""
+
+    if(pos> neg):
+        final_vibe = "positive"
+    elif(pos < neg):
+        final_vibe = "negative"
+    else:
+        final_vibe = "natural vibe"
+    
+    return final_vibe
+
+def getColumenVibes(columns , columnsNames):
+            count = 0
+            for row in myData:
+                if count != 0:
+                    for i in range(len(columns)):                                                       
+                        row[columnsNames[i]] = getMessageVibe(row[columns[i]])
+                       
+                     
+                else:
+                    for i in range(len(columnsNames)):
+                        row[columnsNames[i]] =columnsNames[i]
+                    count=1
+
+
+
+            
+def main():
+
+    
+    
+    
+    
+
   
     #  readData(filePath)
     #  roundColuemns(["FollowersToAccountAge" , "StatusesCountToAccountAge"])
@@ -235,10 +323,21 @@ def main():
     #  getinsults("Text","Insults")
     #  writeData(newFilePath)
      
-       
+     
+
+        # file = open("moods.txt" , "r+")
+        # print(file.readline().split(":"))
+        # print(file.readline().split(":"))
+        # print(file.readline().split(":"))
+        # print(file.readline().split(":"))
+        # print(file.readline().split(":"))
+        # print(file.readline().split(":"))
+      
+    
+
         while True:
             fileName =  input("please enter the file path here : ")
-            newFile = input("do you want the results in other file? if yes please enter the path and the new file name with .csv at the end if no just press enter : ")
+            newFile = input("\ndo you want the results in other file? if yes please enter the path and the new file name with .csv at the end if no just press enter : ")
             if(newFile == ""):
                 newFile  = fileName
             if(readData(fileName)):
@@ -247,10 +346,13 @@ def main():
 
         
         while True:
-            answer = input("please enter your requiest : \n 1. for avrage  \n 2. for charcters count  \n 3. for round columens \n 4. for insultes  \n 5. for ratio of 2 columens \n 0. for exit \n\n  answer : ")
+            answer = input("please enter your requiest : \n 1. for text sentiment  \n 2. for charcters count  \n 3. for round columens \n 4. for insultes  \n 5. for ratio of 2 columens\n 6. excute mood \n 0. Done \n\n  answer : ")
             if(len(answer) == 1):
-                if(re.findall("0|1|2|3|4|5", answer)):
-                    if(answer == "2"):
+                if(re.findall("0|1|2|3|4|5|6", answer)):
+                    if(answer == "1"):
+                        columns , columnsNames = getAnswer()
+                        getColumenVibes(columns, columnsNames)
+                    elif(answer == "2"):
                         columns , columnsNames = getAnswer()
                         getUserDescriptionLength(columns , columnsNames)
                     elif(answer == "3"):
@@ -270,6 +372,8 @@ def main():
                                 print("you can't enter more than one value for ratio value")
 
                         getRatio(columns , columnsNames)
+                    elif(answer == "6"):
+                        executeMood(input("enter the mood name : "))
                     else: break       
                 else: print("please enter a on of the following numbers")           
 
