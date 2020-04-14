@@ -10,3 +10,4 @@ CSV, NLTK library
   5) get the average of columns
   6) get the round of coumens
   7) allow you to put the results in same file or another file
+  8) the system allow the user to make his own mood and execute it whenever neede
